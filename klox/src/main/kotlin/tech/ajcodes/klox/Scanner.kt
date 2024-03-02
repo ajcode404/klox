@@ -58,10 +58,6 @@ class Scanner(
 
             '"' -> string()
 
-            'o' -> if (match('r')) {
-                addToken(TokenType.OR)
-            }
-
             else -> {
                 if (isDigit(c)) {
                     number()
@@ -151,6 +147,7 @@ private fun isAlpha(c: Char): Boolean =
         c == '_'
 
 private val keywords = mapOf(
+    "or" to TokenType.OR,
     "and" to TokenType.AND,
     "class" to TokenType.CLASS,
     "else" to TokenType.ELSE,

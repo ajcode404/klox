@@ -12,7 +12,7 @@ var hadError = false
 fun main(args: Array<String>) {
     when {
         args.size > 1 -> {
-            println("Usage: jlox [script]")
+            println("Usage: klox [script]")
             exitProcess(64)
         }
         args.size == 1 -> runFile(args[0])
@@ -39,18 +39,9 @@ fun runPrompt() {
 }
 
 fun run(source: String) {
-    val tokens = tech.ajcodes.klox.Scanner(source).scanTokens()
+    val tokens = Scanner(source).scanTokens()
     tokens.forEach {
         println(it)
     }
 }
 
-// error handling
-fun error(line: Int, message: String) {
-    report(line, "", message)
-}
-
-fun report(line: Int, where: String, message: String) {
-    System.err.println("[line $line] Error $where: $message")
-    hadError = true
-}
