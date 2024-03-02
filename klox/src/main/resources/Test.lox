@@ -6,7 +6,5 @@ var language = "lox";
 
 /*
 more comments
-/*
-nested comments
-*/
+
 */

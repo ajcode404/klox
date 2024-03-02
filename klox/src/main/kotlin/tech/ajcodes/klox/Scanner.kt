@@ -30,6 +30,7 @@ class Scanner(
             '+' -> addToken(TokenType.PLUS)
             ';' -> addToken(TokenType.SEMICOLON)
             '*' -> if (match('/')) {
+                if (peek() == '\n') line++
                 if (!isAtTheEnd()) {
                     advance()
                 }
@@ -43,24 +44,20 @@ class Scanner(
             '<' -> addToken((if (match('=')) TokenType.LESS_EQUAL else TokenType.LESS))
             '>' -> addToken((if (match('=')) TokenType.GREATER_EQUAL else TokenType.GREATER))
 
-            '/' -> if (match('/')) {
-                while (peek() != '\n' && !isAtTheEnd()) advance()
-            } else if (match('*')) {
-                while (peek() != '*' && !isAtTheEnd()) advance()
-            } else {
-                addToken(TokenType.SLASH)
+            '/' -> when {
+                match('/') -> while (peek() != '\n' && !isAtTheEnd()) advance()
+                match('*') -> while (peek() != '*' && !isAtTheEnd()) {
+                    if (peek() == '\n') line++
+                    advance()
+                }
+                else -> addToken(TokenType.SLASH)
             }
-
             ' ' -> {}
             '\r' -> {}
             '\t' -> {}
             '\n' -> line++
 
             '"' -> string()
-
-            'o' -> if (match('r')) {
-                addToken(TokenType.OR)
-            }
 
             else -> {
                 if (isDigit(c)) {
@@ -151,6 +148,7 @@ private fun isAlpha(c: Char): Boolean =
         c == '_'
 
 private val keywords = mapOf(
+    "or" to TokenType.OR,
     "and" to TokenType.AND,
     "class" to TokenType.CLASS,
     "else" to TokenType.ELSE,
