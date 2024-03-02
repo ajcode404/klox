@@ -1,0 +1,12 @@
+/* multiline comment
+this shoudl work
+*/
+
+var language = "lox";
+
+/*
+more comments
+/*
+nested comments
+*/
+*/
