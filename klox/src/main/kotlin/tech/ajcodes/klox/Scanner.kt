@@ -29,7 +29,13 @@ class Scanner(
             '-' -> addToken(TokenType.MINUS)
             '+' -> addToken(TokenType.PLUS)
             ';' -> addToken(TokenType.SEMICOLON)
-            '*' -> addToken(TokenType.STAR)
+            '*' -> if (match('/')) {
+                if (!isAtTheEnd()) {
+                    advance()
+                }
+            } else {
+                addToken(TokenType.STAR)
+            }
 
             // operators
             '!' -> addToken((if (match('=')) TokenType.BANG_EQUAL else TokenType.BANG))
@@ -39,6 +45,8 @@ class Scanner(
 
             '/' -> if (match('/')) {
                 while (peek() != '\n' && !isAtTheEnd()) advance()
+            } else if (match('*')) {
+                while (peek() != '*' && !isAtTheEnd()) advance()
             } else {
                 addToken(TokenType.SLASH)
             }
