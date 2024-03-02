@@ -43,17 +43,14 @@ class Scanner(
             '<' -> addToken((if (match('=')) TokenType.LESS_EQUAL else TokenType.LESS))
             '>' -> addToken((if (match('=')) TokenType.GREATER_EQUAL else TokenType.GREATER))
 
-            '/' -> if (match('/')) {
-                while (peek() != '\n' && !isAtTheEnd()) advance()
-            } else if (match('*')) {
-                while (peek() != '*' && !isAtTheEnd()) {
+            '/' -> when {
+                match('/') -> while (peek() != '\n' && !isAtTheEnd()) advance()
+                match('*') -> while (peek() != '*' && !isAtTheEnd()) {
                     if (peek() == '\n') line++
                     advance()
                 }
-            } else {
-                addToken(TokenType.SLASH)
+                else -> addToken(TokenType.SLASH)
             }
-
             ' ' -> {}
             '\r' -> {}
             '\t' -> {}
