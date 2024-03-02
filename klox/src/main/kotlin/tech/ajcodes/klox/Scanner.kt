@@ -1,6 +1,6 @@
 package tech.ajcodes.klox
 
-class Scanner constructor(
+class Scanner(
     private val source: String,
 ) {
 
@@ -9,25 +9,6 @@ class Scanner constructor(
     private var current = 0
     private var line = 1
 
-    private val keywords = mapOf(
-        "and" to TokenType.AND,
-        "class" to TokenType.CLASS,
-        "else" to TokenType.ELSE,
-        "false" to TokenType.FALSE,
-        "for" to TokenType.FOR,
-        "fun" to TokenType.FUN,
-        "if" to TokenType.IF,
-        "nil" to TokenType.NIL,
-        "or" to TokenType.OR,
-        "print" to TokenType.PRINT,
-        "return" to TokenType.RETURN,
-        "super" to TokenType.SUPER,
-        "this" to TokenType.THIS,
-        "true" to TokenType.TRUE,
-        "var" to TokenType.VAR,
-        "while" to TokenType.WHILE,
-    )
-
     fun scanTokens(): List<Token> {
         while (!isAtTheEnd()) {
             start = current
@@ -35,17 +16,6 @@ class Scanner constructor(
         }
         tokens.add(Token(TokenType.EOF, "", null, line))
         return tokens
-    }
-
-    private fun isAtTheEnd(): Boolean = current >= source.length
-
-    private fun match(expected: Char): Boolean = when {
-        isAtTheEnd() -> false
-        source[current] != expected -> false
-        else -> {
-            current++
-            true
-        }
     }
 
     private fun scanToken() {
@@ -96,7 +66,14 @@ class Scanner constructor(
         }
     }
 
-    private fun isAlphaNumeric(c: Char): Boolean = isAlpha(c) || isDigit(c)
+    private fun match(expected: Char): Boolean = when {
+        isAtTheEnd() -> false
+        source[current] != expected -> false
+        else -> {
+            current++
+            true
+        }
+    }
 
     private fun identifier() {
         while (isAlphaNumeric(peek())) advance()
@@ -104,11 +81,6 @@ class Scanner constructor(
         val type: TokenType = keywords[text] ?: TokenType.IDENTIFIER
         addToken(type)
     }
-
-    private fun isAlpha(c: Char): Boolean =
-        (c in 'a'..'z') ||
-            (c in 'A'..'Z') ||
-            c == '_'
 
     private fun peekNext(): Char {
         if (current + 1 >= source.length) return Char.MIN_VALUE
@@ -127,8 +99,6 @@ class Scanner constructor(
             source.substring(start, current).toDouble(),
         )
     }
-
-    private fun isDigit(c: Char): Boolean = c in '0'..'9'
 
     private fun string() {
         while (peek() != '"' && !isAtTheEnd()) {
@@ -159,4 +129,34 @@ class Scanner constructor(
         val text = source.substring(start, current)
         tokens.add(Token(type, text, literal, line))
     }
+
+    private fun isAtTheEnd(): Boolean = current >= source.length
 }
+
+private fun isAlphaNumeric(c: Char): Boolean = isAlpha(c) || isDigit(c)
+
+private fun isDigit(c: Char): Boolean = c in '0'..'9'
+
+private fun isAlpha(c: Char): Boolean =
+    (c in 'a'..'z') ||
+        (c in 'A'..'Z') ||
+        c == '_'
+
+private val keywords = mapOf(
+    "and" to TokenType.AND,
+    "class" to TokenType.CLASS,
+    "else" to TokenType.ELSE,
+    "false" to TokenType.FALSE,
+    "for" to TokenType.FOR,
+    "fun" to TokenType.FUN,
+    "if" to TokenType.IF,
+    "nil" to TokenType.NIL,
+    "or" to TokenType.OR,
+    "print" to TokenType.PRINT,
+    "return" to TokenType.RETURN,
+    "super" to TokenType.SUPER,
+    "this" to TokenType.THIS,
+    "true" to TokenType.TRUE,
+    "var" to TokenType.VAR,
+    "while" to TokenType.WHILE,
+)
