@@ -46,7 +46,10 @@ class Scanner(
             '/' -> if (match('/')) {
                 while (peek() != '\n' && !isAtTheEnd()) advance()
             } else if (match('*')) {
-                while (peek() != '*' && !isAtTheEnd()) advance()
+                while (peek() != '*' && !isAtTheEnd()) {
+                    if (peek() == '\n') line++
+                    advance()
+                }
             } else {
                 addToken(TokenType.SLASH)
             }
