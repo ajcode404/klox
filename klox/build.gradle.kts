@@ -19,9 +19,9 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(18)
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("tech.ajcodes.klox.LoxKt")
 }
