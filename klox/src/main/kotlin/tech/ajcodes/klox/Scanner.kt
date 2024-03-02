@@ -30,6 +30,7 @@ class Scanner(
             '+' -> addToken(TokenType.PLUS)
             ';' -> addToken(TokenType.SEMICOLON)
             '*' -> if (match('/')) {
+                if (peek() == '\n') line++
                 if (!isAtTheEnd()) {
                     advance()
                 }
