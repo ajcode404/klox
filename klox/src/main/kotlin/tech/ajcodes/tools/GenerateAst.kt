@@ -24,12 +24,44 @@ fun defineAst(outputDir: String, baseName: String, types: Array<String>) {
     writer.println("package tech.ajcodes.klox")
     writer.println()
     writer.println("sealed class $baseName {")
+    // the base accept() method.
+    writer.println()
+    writer.println("\tabstract fun <R> accept(visitor: Visitor<R>): R")
+
+    writer.println("}")
+
+    writer.println()
+    // define visitor
+    defineVisitor(writer, baseName, types)
+
+    // define type
     types.forEach {
         val className = it.split("-")[0].trim()
         val fields = it.split("-")[1].trim()
-        writer.println("\tdata class $className($fields): $baseName()")
+        """
+            
+            data class $className($fields): $baseName() {
+                override fun <R> accept(visitor: Visitor<R>): R {
+                    return visitor.visit$className$baseName(this)
+                }
+            }
+        """.trimIndent().let {
+            writer.println(it)
+        }
     }
-    writer.println("}")
     writer.println()
     writer.close()
 }
+
+
+
+fun defineVisitor(writer: PrintWriter, baseName: String, types: Array<String>) {
+    writer.println("interface Visitor<R> {")
+    types.forEach {
+        val typeName = it.split("-")[0].trim()
+        writer.println("\tfun visit$typeName$baseName(${baseName.lowercase()}: $typeName): R")
+    }
+    writer.println("}")
+}
+
+
