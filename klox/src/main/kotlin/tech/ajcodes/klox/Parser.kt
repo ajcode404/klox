@@ -1,19 +1,6 @@
 package tech.ajcodes.klox
 
-import java.lang.Exception
 import java.lang.RuntimeException
-import kotlin.math.exp
-// grammer rules
-//expression     → equality ;
-//equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-//comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-//term           → factor ( ( "-" | "+" ) factor )* ;
-//factor         → unary ( ( "/" | "*" ) unary )* ;
-//unary          → ( "!" | "-" ) unary
-//| primary ;
-//primary        → NUMBER | STRING | "true" | "false" | "nil"
-//| "(" expression ")" ;
-
 class Parser(
     val tokens: List<Token>
 ) {
@@ -28,8 +15,10 @@ class Parser(
         }
     }
 
+    // expression     → equality ;
     private fun expressions(): Expr = equality()
 
+    // equality       → comparison ( ( "!=" | "==" ) comparison )* ;
     private fun equality(): Expr {
         var expr = comparison()
 
@@ -41,6 +30,7 @@ class Parser(
         return expr
     }
 
+    // comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
     private fun comparison(): Expr {
         var expr: Expr = term()
         while (match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL)) {
@@ -51,7 +41,7 @@ class Parser(
         return expr
     }
 
-    // factor ( ( "-" | "+" ) factor )* ;
+    // term           → factor ( ( "-" | "+" ) factor )* ;
     private fun term(): Expr {
         var expr: Expr = factor()
         while (match(TokenType.MINUS, TokenType.PLUS)) {
@@ -62,7 +52,7 @@ class Parser(
         return expr
     }
 
-    // unary ( ( "/" | "*" ) unary )* ;
+    // factor         → unary ( ( "/" | "*" ) unary )* ;
     private fun factor(): Expr {
         var expr: Expr = unary()
         while (match(TokenType.SLASH, TokenType.STAR)) {
@@ -73,7 +63,7 @@ class Parser(
         return expr
     }
 
-    // ( "!" | "-" ) unary | primary ;
+    // unary          → ( "!" | "-" ) unary | primary ;
     private fun unary(): Expr {
         while (match(TokenType.BANG, TokenType.MINUS)) {
             val operator = previous()
@@ -83,6 +73,7 @@ class Parser(
         return primary()
     }
 
+    // primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
     private fun primary(): Expr {
         return when {
             match(TokenType.FALSE) -> Literal(false)
