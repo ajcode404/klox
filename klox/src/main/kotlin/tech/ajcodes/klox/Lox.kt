@@ -40,8 +40,9 @@ fun runPrompt() {
 
 fun run(source: String) {
     val tokens = Scanner(source).scanTokens()
-    tokens.forEach {
-        println(it)
-    }
+    val parser = Parser(tokens)
+    val expr = parser.parse()
+    if (hadError) return
+    println(AstPrinter().print(expr))
 }
 
