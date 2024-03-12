@@ -2,7 +2,7 @@ package tech.ajcodes.klox
 
 import java.lang.RuntimeException
 class Parser(
-    val tokens: List<Token>
+    private val tokens: List<Token>
 ) {
 
     private var current = 0
