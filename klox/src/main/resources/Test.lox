@@ -2,8 +2,7 @@
 this shoudl work
 */
 
-var language = "lox";
-
+2 + 2
 /*
 more comments
 

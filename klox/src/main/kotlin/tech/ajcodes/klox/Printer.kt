@@ -4,7 +4,7 @@ import kotlin.math.exp
 
 class AstPrinter : Visitor<String> {
 
-    fun print(expr: Expr) = expr.accept(this)
+    fun print(expr: Expr?) = expr?.accept(this)
 
     override fun visitBinaryExpr(expr: Binary): String {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right)
