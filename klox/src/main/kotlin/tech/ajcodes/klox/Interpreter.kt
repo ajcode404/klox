@@ -108,7 +108,7 @@ class Interpreter : Visitor<Any> {
         throw RuntimeError(operator, "Operands must be a numbers.")
     }
 
-    private fun evaluate(expression: Expr?): Any? {
+    fun evaluate(expression: Expr?): Any? {
         return expression?.accept(this)
     }
 
