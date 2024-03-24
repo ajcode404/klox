@@ -8,6 +8,9 @@ import java.nio.file.Paths
 import kotlin.system.exitProcess
 
 var hadError = false
+var hadRuntimeError = false
+
+val interpreter = Interpreter()
 
 fun main(args: Array<String>) {
     when {
@@ -24,6 +27,7 @@ fun runFile(path: String) {
     val bytes = Files.readAllBytes(Paths.get(path))
     run(String(bytes, Charset.defaultCharset()))
     if (hadError) exitProcess(65)
+    if (hadRuntimeError) exitProcess(70)
 }
 
 fun runPrompt() {
@@ -43,6 +47,7 @@ fun run(source: String) {
     val parser = Parser(tokens)
     val expr = parser.parse()
     if (hadError) return
+    interpreter.interpret(expr)
     println(AstPrinter().print(expr))
 }
 
