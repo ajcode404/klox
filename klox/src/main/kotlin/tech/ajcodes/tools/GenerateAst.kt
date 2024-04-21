@@ -13,7 +13,11 @@ fun main(args: Array<String>) {
         "Binary   - val left: Expr,val operator: Token ,val right: Expr",
         "Grouping - val expression: Expr",
         "Literal  - val value: Any?",
-        "Unary    - val operator: Token ,val right: Expr"
+        "Unary    - val operator: Token ,val right: Expr",
+    ))
+    defineAst(outputDir, "Stmt", arrayOf(
+        "Expression - val expression: Expr",
+        "Print      - val expression: Expr",
     ))
 }
 
@@ -26,7 +30,7 @@ fun defineAst(outputDir: String, baseName: String, types: Array<String>) {
     writer.println("sealed class $baseName {")
     // the base accept() method.
     writer.println()
-    writer.println("\tabstract fun <R> accept(visitor: Visitor<R>): R")
+    writer.println("\tabstract fun <R> accept(visitor: ${baseName}Visitor<R>): R?")
 
     writer.println("}")
 
@@ -41,7 +45,7 @@ fun defineAst(outputDir: String, baseName: String, types: Array<String>) {
         """
             
             data class $className($fields): $baseName() {
-                override fun <R> accept(visitor: Visitor<R>): R {
+                override fun <R> accept(visitor: ${baseName}Visitor<R>): R? {
                     return visitor.visit$className$baseName(this)
                 }
             }
@@ -56,10 +60,10 @@ fun defineAst(outputDir: String, baseName: String, types: Array<String>) {
 
 
 fun defineVisitor(writer: PrintWriter, baseName: String, types: Array<String>) {
-    writer.println("interface Visitor<R> {")
+    writer.println("interface ${baseName}Visitor<R> {")
     types.forEach {
         val typeName = it.split("-")[0].trim()
-        writer.println("\tfun visit$typeName$baseName(${baseName.lowercase()}: $typeName): R")
+        writer.println("\tfun visit$typeName$baseName(${baseName.lowercase()}: $typeName): R?")
     }
     writer.println("}")
 }
